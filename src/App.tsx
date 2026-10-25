@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Project } from './types/portfolio';
-import { SiteContentProvider, useSiteContent } from './context/SiteContentContext';
+import { SiteContentProvider } from './context/SiteContentContext';
 import { Navbar } from './components/ui/Navbar';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { IntroLoader } from './components/ui/IntroLoader';
@@ -13,11 +13,8 @@ import { ExperienceSection } from './components/sections/ExperienceSection';
 import { EducationSection } from './components/sections/EducationSection';
 import { ContactSection } from './components/sections/ContactSection';
 import { ProjectModal } from './components/ui/ProjectModal';
-import { FloatingEditButton } from './components/editor/FloatingEditButton';
-import { ContentEditorDrawer } from './components/editor/ContentEditorDrawer';
 
 function PortfolioMain() {
-  const { openEditor } = useSiteContent();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeSection, setActiveSection] = useState('hero');
@@ -69,7 +66,6 @@ function PortfolioMain() {
           const el = document.getElementById('contact');
           el?.scrollIntoView({ behavior: 'smooth' });
         }}
-        onOpenCustomizer={openEditor}
       />
 
       {/* Main Single-Page Content */}
@@ -79,12 +75,9 @@ function PortfolioMain() {
             const el = document.getElementById('contact');
             el?.scrollIntoView({ behavior: 'smooth' });
           }}
-          onOpenCustomizer={openEditor}
         />
 
-        <AboutSection
-          onOpenCustomizer={openEditor}
-        />
+        <AboutSection />
 
         <SkillsSection />
 
@@ -103,12 +96,6 @@ function PortfolioMain() {
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
-
-      {/* Floating "Edit site" glass button at bottom-left */}
-      <FloatingEditButton />
-
-      {/* Built-in Content Editor Drawer */}
-      <ContentEditorDrawer />
     </div>
   );
 }

@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { useSiteContent } from '../../context/SiteContentContext';
 
 interface IntroLoaderProps {
   onComplete: () => void;
 }
 
 export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete }) => {
+  const { content } = useSiteContent();
   const [progress, setProgress] = useState(0);
   const [isFading, setIsFading] = useState(false);
+
+  // Compute initials from shortName or full name (e.g. "KM RAHAT" -> "KR")
+  const initials = (() => {
+    const raw = content.profile?.shortName || content.profile?.name || 'KR';
+    const words = raw.trim().split(/\s+/);
+    if (words.length >= 2) {
+      return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+    }
+    return raw.substring(0, 2).toUpperCase();
+  })();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -43,7 +55,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete }) => {
           >
             <div className="w-full h-full bg-[var(--bg)] rounded-2xl flex items-center justify-center">
               <span className="text-xl font-bold font-heading text-gradient-cosmic">
-                KV
+                {initials}
               </span>
             </div>
           </div>
@@ -67,8 +79,8 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete }) => {
             />
           </div>
 
-          <p className="text-[11px] text-[var(--muted)] font-mono tracking-wider">
-            SCROLL-CONTROLLED 3D CYBER CORE
+          <p className="text-[11px] font-mono text-[var(--muted)]/60">
+            {content.profile.name} // Portfolio Engine
           </p>
         </div>
       </div>

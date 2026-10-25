@@ -6,14 +6,10 @@ import { useSiteContent } from '../../context/SiteContentContext';
 
 interface HeroSectionProps {
   onOpenContact: () => void;
-  onOpenCustomizer: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
-  onOpenContact,
-  onOpenCustomizer,
-}) => {
-  const { content, enableEditor } = useSiteContent();
+export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
+  const { content } = useSiteContent();
   const { profile, hero } = content;
   const roles = profile.roles || [];
 
@@ -62,27 +58,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <HeroParticlePortrait photoUrl={profile.photoUrl} />
 
       <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10">
-        
         {/* Left Column: Typographic Hierarchy & Primary Narrative */}
         <div className="lg:col-span-7 space-y-6 z-10">
-          
           {/* Editorial Kicker */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-xs font-mono text-[var(--secondary)]">
-              <span className="w-2 h-2 rounded-full bg-[var(--secondary)] animate-ping" />
-              <span>{hero.kicker}</span>
-            </div>
-            {enableEditor && (
-              <button
-                onClick={() => {
-                  soundManager.playClick();
-                  onOpenCustomizer();
-                }}
-                className="text-[11px] text-[var(--muted)] hover:text-[var(--secondary)] font-mono underline underline-offset-4 transition-colors cursor-pointer"
-              >
-                [Edit Info]
-              </button>
-            )}
+          <div className="flex items-center gap-2 text-xs font-mono text-[var(--secondary)]">
+            <span className="w-2 h-2 rounded-full bg-[var(--secondary)] animate-ping" />
+            <span>{hero.kicker}</span>
           </div>
 
           {/* Hero Name with Multi-Tone Gradient */}

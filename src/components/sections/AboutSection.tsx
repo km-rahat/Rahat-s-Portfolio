@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { soundManager } from '../../utils/audio';
-import { Code2, Compass, Cpu, Edit3 } from 'lucide-react';
+import { Code2, Compass, Cpu } from 'lucide-react';
 import { useSiteContent } from '../../context/SiteContentContext';
 
-interface AboutSectionProps {
-  onOpenCustomizer: () => void;
-}
-
-export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenCustomizer }) => {
-  const { content, enableEditor } = useSiteContent();
+export const AboutSection: React.FC = () => {
+  const { content } = useSiteContent();
   const { profile, about } = content;
   const [activeTab, setActiveTab] = useState<'manifesto' | 'process'>('manifesto');
   const [imgError, setImgError] = useState(false);
@@ -31,23 +27,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenCustomizer }) 
             {about.heading}
           </h2>
         </div>
-        {enableEditor && (
-          <button
-            onClick={() => {
-              soundManager.playClick();
-              onOpenCustomizer();
-            }}
-            className="flex items-center gap-1.5 text-xs text-[var(--muted)] hover:text-[var(--secondary)] font-mono transition-colors self-start sm:self-auto cursor-pointer"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>Customize Profile</span>
-          </button>
-        )}
       </div>
 
       {/* Main Split: Glowing Portrait + Bio Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        
         {/* Creator Portrait in Glowing Frame */}
         <div className="lg:col-span-5 flex justify-center">
           <div className="relative group">
@@ -80,7 +63,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenCustomizer }) 
 
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-[var(--text)] backdrop-blur-md bg-black/40 px-3 py-1.5 rounded-xl border border-white/10">
                   <span className="text-[var(--secondary)] font-semibold">{profile.location}</span>
-                  <span className="text-[var(--secondary)]">Available</span>
+                  <span className="text-[var(--secondary)]">{profile.availabilityText ? 'Available' : 'Online'}</span>
                 </div>
               </div>
             </div>
@@ -185,9 +168,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenCustomizer }) 
             <div className="text-sm font-semibold text-[var(--text)] mt-2">
               {stat.label}
             </div>
-            <div className="text-xs text-[var(--muted)] font-mono mt-1">
-              {stat.subtext}
-            </div>
+            {stat.subtext && (
+              <div className="text-xs text-[var(--muted)] font-mono mt-1">
+                {stat.subtext}
+              </div>
+            )}
           </div>
         ))}
       </div>

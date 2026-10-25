@@ -6,13 +6,12 @@ import { soundManager } from '../../utils/audio';
 import { SkillItem } from '../../types/portfolio';
 import { useSiteContent } from '../../context/SiteContentContext';
 
+import { SITE_CONTENT } from '../../content';
+
 interface SkillsSectionProps {
   skills?: SkillData[];
 }
 
-// =========================================================================
-// 1. STARTER SKILLS LIST
-// =========================================================================
 export interface SkillData {
   id: string;
   name: string;
@@ -22,136 +21,7 @@ export interface SkillData {
   usedIn: string[];
 }
 
-export const SKILLS_LIST: SkillData[] = [
-  {
-    id: 'react-next',
-    name: 'React / Next.js',
-    category: 'Frontend',
-    level: 95,
-    description: 'Modern component architecture, SSR/SSG, App Router, and high-performance reactive web applications.',
-    usedIn: ['Next.js App Router', 'React 19', 'Server Actions'],
-  },
-  {
-    id: 'typescript',
-    name: 'TypeScript',
-    category: 'Core / Languages',
-    level: 96,
-    description: 'Strict type-safe systems, complex generic patterns, AST manipulation, and robust developer tooling.',
-    usedIn: ['Enterprise Codebases', 'Generic Design', 'Strict Typing'],
-  },
-  {
-    id: 'tailwind',
-    name: 'Tailwind CSS',
-    category: 'Frontend',
-    level: 98,
-    description: 'Utility-first token architectures, custom theme plugins, responsive design, and zero-runtime CSS layouts.',
-    usedIn: ['Design Systems', 'Modern UI', 'Micro-Interactions'],
-  },
-  {
-    id: 'html-canvas',
-    name: 'HTML5 & Canvas',
-    category: 'Frontend',
-    level: 94,
-    description: 'Semantic document tree, custom 2D bitmap manipulation, ImageData processing, and offscreen rendering.',
-    usedIn: ['Particle Systems', '2D Games', 'Raster Graphics'],
-  },
-  {
-    id: 'threejs',
-    name: 'Three.js / WebGL',
-    category: '3D / Graphics',
-    level: 92,
-    description: 'Low-level WebGL pipelines, procedural BufferGeometries, custom PBR material pipelines, and 60 FPS scenes.',
-    usedIn: ['3D Web Experiences', 'PBR Materials', 'Procedural Mesh'],
-  },
-  {
-    id: 'r3f',
-    name: 'React Three Fiber',
-    category: '3D / Graphics',
-    level: 94,
-    description: 'Declarative 3D scene graphs, Drei integration, spring-driven kinematics, and synchronized camera rigs.',
-    usedIn: ['Interactive 3D UI', 'Drei Controls', 'Frame Loops'],
-  },
-  {
-    id: 'glsl',
-    name: 'GLSL Shaders',
-    category: '3D / Graphics',
-    level: 90,
-    description: 'Vertex & fragment shaders, raymarching, simplex/perlin noise synthesis, and screen-space post-processing.',
-    usedIn: ['Custom VFX', 'Noise Waves', 'Distortion Effects'],
-  },
-  {
-    id: 'framer-motion',
-    name: 'Framer Motion',
-    category: 'Frontend',
-    level: 92,
-    description: 'Physical spring animations, layout morphing, gesture responders, and orchestration timelines.',
-    usedIn: ['Page Transitions', 'Micro-Interactions', 'Layout Springs'],
-  },
-  {
-    id: 'gsap',
-    name: 'GSAP & ScrollTrigger',
-    category: '3D / Graphics',
-    level: 91,
-    description: 'Pinned scroll choreographies, scrubbing camera timelines, MorphSVG, and high-precision animation tweens.',
-    usedIn: ['Scroll Narratives', 'Scrub Timelines', 'SVG Morphing'],
-  },
-  {
-    id: 'node-express',
-    name: 'Node.js & Express',
-    category: 'Backend',
-    level: 90,
-    description: 'Scalable REST services, asynchronous queue workers, custom streaming pipelines, and secure middleware.',
-    usedIn: ['REST Endpoints', 'Async Workers', 'Stream Pipelines'],
-  },
-  {
-    id: 'postgres-prisma',
-    name: 'PostgreSQL & Prisma',
-    category: 'Backend',
-    level: 88,
-    description: 'Relational data modeling, ACID transactions, Prisma ORM schema migrations, and index optimization.',
-    usedIn: ['PostgreSQL DB', 'Prisma Schema', 'Query Optimization'],
-  },
-  {
-    id: 'graphql-rest',
-    name: 'GraphQL & REST APIs',
-    category: 'Backend',
-    level: 89,
-    description: 'Schema-first API design, typed query resolvers, mutation contracts, and distributed edge caching.',
-    usedIn: ['Apollo Client', 'Type-Safe APIs', 'Edge Cache'],
-  },
-  {
-    id: 'firebase-supabase',
-    name: 'Firebase & Supabase',
-    category: 'Backend',
-    level: 91,
-    description: 'Real-time database synchronizations, Row Level Security (RLS), OAuth auth flows, and edge functions.',
-    usedIn: ['Realtime Sync', 'Firestore Rules', 'Cloud Auth'],
-  },
-  {
-    id: 'vite-webpack',
-    name: 'Vite & Webpack',
-    category: 'Tools / DevOps',
-    level: 93,
-    description: 'Ultra-fast ESM build pipelines, Rollup custom plugins, code chunk splitting, and production asset tuning.',
-    usedIn: ['Fast HMR', 'Bundle Optimization', 'Tree Shaking'],
-  },
-  {
-    id: 'blender-assets',
-    name: 'Blender & 3D Assets',
-    category: '3D / Graphics',
-    level: 86,
-    description: 'Low-poly topology modeling, UV unwrapping, normal/ambient occlusion texture baking, and GLTF Draco exports.',
-    usedIn: ['GLTF Pipelines', 'Texture Baking', '3D Asset Prep'],
-  },
-  {
-    id: 'web-performance',
-    name: 'Web Performance',
-    category: 'Tools / DevOps',
-    level: 95,
-    description: 'Core Web Vitals tuning, 60 FPS frame-budget enforcement, memory leak audits, and GPU profiling.',
-    usedIn: ['Lighthouse 100', 'INP / LCP / CLS', 'Chrome DevTools'],
-  },
-];
+export const SKILLS_LIST: SkillData[] = SITE_CONTENT.skills as SkillData[];
 
 // Exact Category Color Definitions
 export const CATEGORY_COLORS: Record<SkillData['category'], { hex: string; varName: string; label: string }> = {

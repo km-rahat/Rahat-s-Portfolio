@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Menu, X, Sliders } from 'lucide-react';
+import { Volume2, VolumeX, Menu, X } from 'lucide-react';
 import { soundManager } from '../../utils/audio';
 import { useSiteContent } from '../../context/SiteContentContext';
 
@@ -7,16 +7,14 @@ interface NavbarProps {
   brandName?: string;
   activeSection: string;
   onOpenContact: () => void;
-  onOpenCustomizer?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   brandName: propBrandName,
   activeSection,
   onOpenContact,
-  onOpenCustomizer,
 }) => {
-  const { content, enableEditor, openEditor } = useSiteContent();
+  const { content } = useSiteContent();
   const brandName = propBrandName || content.profile.shortName;
 
   const [scrolled, setScrolled] = useState(false);
@@ -44,14 +42,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'Education', href: '#education' },
     { label: 'Contact', href: '#contact' },
   ];
-
-  const handleEditClick = () => {
-    if (onOpenCustomizer) {
-      onOpenCustomizer();
-    } else {
-      openEditor();
-    }
-  };
 
   return (
     <header
@@ -158,21 +148,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 Get in Touch
               </button>
-
-              {/* Only show when ENABLE_EDITOR is true */}
-              {enableEditor && (
-                <button
-                  onClick={() => {
-                    soundManager.playClick();
-                    setMobileMenuOpen(false);
-                    handleEditClick();
-                  }}
-                  className="w-full py-2 flex items-center justify-center gap-1.5 text-xs text-[var(--secondary)] hover:text-[var(--text)] cursor-pointer"
-                >
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span>Site Editor</span>
-                </button>
-              )}
             </div>
           </nav>
         </div>
