@@ -129,7 +129,7 @@ export interface SiteContent {
 
 export const SITE_CONTENT: SiteContent = {
   profile: {
-    name: "KM RAHAT",
+    name: "KHALID MAHMUD RAHAT",
     shortName: "KM RAHAT",
     roles: [
       "Software Engineering Student",
