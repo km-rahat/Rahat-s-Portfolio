@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: var(--bg);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-skill-green: var(--skill-green);
+  --color-skill-orange: var(--skill-orange);
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #05060F;
+  --primary: #7C3AED;
+  --secondary: #22D3EE;
+  --accent: #F472B6;
+  --skill-green: #34D399;
+  --skill-orange: #FB923C;
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --card: rgba(255, 255, 255, 0.05);
+
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Outfit', 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  color-scheme: dark;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+/* Glassmorphism primitives using strict CSS variables */
+.glass-panel {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.3);
+}
+
+/* Fixed Gradient text with permanent solid fallback */
+.text-gradient-cosmic {
+  color: var(--secondary); /* Fallback */
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan {
+  color: var(--secondary); /* Fallback */
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Keyframe animations - only transform, never fading out colors */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
