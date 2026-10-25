@@ -467,7 +467,7 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       id: "education-degree",
-      period: "2016 — 2020",
+      period: "2024 — present",
       title: "General Member, AIUB Computer Club",
       place: "AIUB Computer Club (ACC)",
       description: "Active member of the university's computer club, taking part in tech activities and learning from peers."
