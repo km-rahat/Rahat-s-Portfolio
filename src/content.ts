@@ -7,7 +7,7 @@
 export interface SkillItemContent {
   id: string;
   name: string;
-  category: 'Frontend' | '3D / Graphics' | 'Backend' | 'Tools / DevOps' | 'Core / Languages';
+  category: 'Frontend' | '3D / Graphics' | 'Backend' | 'Tools / DevOps' | 'Tools' | 'Core / Languages' | string;
   level: number; // 0 - 100
   description: string;
   usedIn: string[];
@@ -16,7 +16,7 @@ export interface SkillItemContent {
 export interface ProjectContent {
   id: string;
   title: string;
-  category: '3d-webgl' | 'ai-systems' | 'fintech' | 'creative';
+  category: string;
   description: string;
   extendedDescription: string;
   image: string;
@@ -211,6 +211,18 @@ export const SITE_CONTENT: SiteContent = {
       ]
     },
     {
+      id: "wordpress",
+      name: "WordPress",
+      category: "Tools",
+      level: 85,
+      description: "Building and managing websites with WordPress, from themes and plugins to content and layout.",
+      usedIn: [
+        "Websites",
+        "Blogs",
+        "Content sites"
+      ]
+    },
+    {
       id: "typescript",
       name: "Frontend Development",
       category: "Frontend",
@@ -338,103 +350,74 @@ export const SITE_CONTENT: SiteContent = {
   ],
   projects: [
     {
-      id: "cyber-finance",
-      title: "Algorithmic Liquid Terminal",
-      category: "fintech",
-      description: "High-frequency decentralized market intelligence and algorithmic order routing console.",
-      extendedDescription: "Architected a real-time financial execution suite processing 10,000+ tick events per second with sub-millisecond chart rendering, custom WebGL candlestick shaders, and glassmorphic depth.",
-      image: "/src/assets/images/project_cyber_finance_1791914218241.jpg",
+      id: "gadget-world",
+      title: "Gadget World",
+      category: "e-commerce",
+      description: "An online store for smart gadgets and everyday tech products, built with a focus on customer satisfaction and a smooth shopping experience.",
+      extendedDescription: "A comprehensive digital marketplace engineered for smart tech essentials. Built with React, TypeScript, Tailwind CSS, and Firebase, featuring intuitive catalog exploration, optimized cart workflows, and responsive checkout experiences.",
+      image: "https://cdn.shoutmecrunch.com/wp-content/uploads/2026/10/2026-10-30-01-07-51.png",
       techTags: [
-        "React 19",
-        "Three.js",
-        "WebSockets",
-        "Tailwind CSS",
-        "TypeScript"
-      ],
-      year: "2026",
-      role: "Lead Systems Architect & 3D UI",
-      metrics: "$1.2M+ Daily Volume Processed",
-      liveUrl: "https://example.com/liquid-terminal",
-      githubUrl: "https://github.com/example/liquid-terminal",
-      highlights: [
-        "Custom GPU-accelerated candlestick rendering at 120 FPS",
-        "Instant WebSocket orderbook streaming with zero frame drops",
-        "Dynamic risk telemetry visualizer with glowing vector lines"
-      ]
-    },
-    {
-      id: "spatial-ai",
-      title: "Aether Neural Workspace",
-      category: "ai-systems",
-      description: "Volumetric 3D node graph and spatial canvas for multi-agent generative workflow synthesis.",
-      extendedDescription: "A revolutionary 3D spatial thinking environment enabling knowledge workers to visualize agent reasoning paths, semantic clusters, and live generative memory graphs in an infinite dark cosmic viewport.",
-      image: "/src/assets/images/project_spatial_ai_1791914217654.jpg",
-      techTags: [
-        "Three.js",
-        "WebGL Shaders",
-        "Force-Directed Graph",
-        "TypeScript",
-        "Tailwind CSS"
-      ],
-      year: "2025",
-      role: "Founding Engineer & Interaction Designer",
-      metrics: "45k Active Nodes Clustered",
-      liveUrl: "https://example.com/aether-workspace",
-      githubUrl: "https://github.com/example/aether-workspace",
-      highlights: [
-        "3D spatial clustering with spatial audio cues on node activation",
-        "Custom raymarching bloom shaders for volumetric node links",
-        "Sub-16ms camera navigation with inertia damping"
-      ]
-    },
-    {
-      id: "generative-synth",
-      title: "Holographic Audio Synthesis Studio",
-      category: "creative",
-      description: "Browser-native modular sound synthesizer featuring reactive 3D harmonic waveforms.",
-      extendedDescription: "An audiovisual production platform coupling the Web Audio API with procedural geometry deformation. Every frequency, harmonic resonance, and envelope shape dynamically sculpts a 3D holographic wireframe in real time.",
-      image: "/src/assets/images/project_generative_synth_1791914218103.jpg",
-      techTags: [
-        "Web Audio API",
-        "Three.js",
-        "DSP Algorithms",
-        "Motion",
-        "Tailwind CSS"
-      ],
-      year: "2025",
-      role: "Solo Creator & Sound Engineer",
-      metrics: "250k+ Tracks Exported",
-      liveUrl: "https://example.com/holographic-synth",
-      githubUrl: "https://github.com/example/holographic-synth",
-      highlights: [
-        "Zero-latency polyphonic oscillator engine with 16 voice matrix",
-        "Audio-reactive vertex displacement shader matching FFT frequencies",
-        "Interactive patch-cable routing in full 3D perspective"
-      ]
-    },
-    {
-      id: "nebula-cloud",
-      title: "Global Edge Mesh Constellation",
-      category: "3d-webgl",
-      description: "Interactive 3D planetarium and telemetry monitor for distributed edge server clusters.",
-      extendedDescription: "A planetary-scale network monitor that visualizes worldwide traffic flow, DDoS mitigations, and fiber transit health as glowing cyber-arcs traversing an interactive 3D globe with real-time ping telemetry.",
-      image: "/src/assets/images/project_nebula_cloud_1791914218276.jpg",
-      techTags: [
-        "Three.js",
-        "GeoJSON",
-        "Edge Telemetry",
         "React",
-        "Tailwind CSS"
+        "TypeScript",
+        "Tailwind CSS",
+        "Firebase"
       ],
-      year: "2024",
-      role: "Visualization Lead",
-      metrics: "99.999% Reliability Monitored",
-      liveUrl: "https://example.com/edge-constellation",
-      githubUrl: "https://github.com/example/edge-constellation",
+      year: "2025",
+      role: "Full-Stack Developer",
+      metrics: "Live Production Store",
+      liveUrl: "https://gadget-world-nine.vercel.app/",
+      githubUrl: "https://github.com/km-rahat/Gadget-World",
       highlights: [
-        "Interactive 3D geospatial projection with 42,000 live server pins",
-        "Custom bezier curve particle flow indicating transit packets",
-        "Adaptive LOD rendering dynamically scaling for mobile and desktop"
+        "Interactive product catalog with fast categorical filtering",
+        "Reactive cart state management with instant calculations",
+        "Smooth mobile-optimized commerce flow and checkout UX"
+      ]
+    },
+    {
+      id: "vision-warriors",
+      title: "Vision Warriors",
+      category: "showcase",
+      description: "A product showcase website for smart products that make daily life better, with a bold orange-themed design that works well on mobile.",
+      extendedDescription: "A product showcase platform for everyday smart innovations. Features a bold orange-themed visual identity with high-contrast typography, ergonomic mobile navigation, and interactive product presentation.",
+      image: "https://cdn.shoutmecrunch.com/wp-content/uploads/2026/10/2026-10-30-01-08-33.png",
+      techTags: [
+        "[TECH_1]",
+        "[TECH_2]",
+        "[TECH_3]"
+      ],
+      year: "2025",
+      role: "UI/UX & Frontend Developer",
+      metrics: "High-Impact Visual UI",
+      liveUrl: "https://vision-warriors.vercel.app/",
+      githubUrl: "none",
+      highlights: [
+        "Bold orange-themed visual branding with modern styling",
+        "Fully responsive layout crafted for smooth mobile browsing",
+        "Refined interactive sections highlighting product benefits"
+      ]
+    },
+    {
+      id: "amanah-loan-tracker",
+      title: "Amanah Loan Tracker",
+      category: "fintech",
+      description: "A simple web app to record and track loans, so lenders and borrowers can keep clear and organized records.",
+      extendedDescription: "A dependable and transparent financial record-keeping web app created to track loans between lenders and borrowers. Provides clear audit trails, repayment logs, and balance tracking powered by Supabase and React.",
+      image: "https://cdn.shoutmecrunch.com/wp-content/uploads/2026/10/2026-10-30-01-06-20.png",
+      techTags: [
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Supabase"
+      ],
+      year: "2025",
+      role: "Full-Stack Developer",
+      metrics: "Reliable Ledger System",
+      liveUrl: "https://amanah-loan-tracker.vercel.app/",
+      githubUrl: "https://github.com/km-rahat/Amanah-Debt-Loan-Tracker",
+      highlights: [
+        "Clear loan ledger with lender and borrower balance tracking",
+        "Supabase persistent database integration and secure authentication",
+        "Clean, intuitive tabular views with search and status filters"
       ]
     }
   ],

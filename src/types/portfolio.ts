@@ -1,11 +1,12 @@
 export interface Project {
   id: string;
   title: string;
-  category: '3d-webgl' | 'ai-systems' | 'fintech' | 'creative';
+  category: string;
   description: string;
   extendedDescription: string;
   image: string;
-  tags: string[];
+  tags?: string[];
+  techTags?: string[];
   year: string;
   role: string;
   metrics?: string;

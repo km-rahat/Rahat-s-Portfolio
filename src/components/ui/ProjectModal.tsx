@@ -9,6 +9,12 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+  const [imgError, setImgError] = React.useState(false);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [project]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -18,6 +24,22 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
   }, [onClose]);
 
   if (!project) return null;
+
+  const hasGithub = Boolean(
+    project.githubUrl &&
+    project.githubUrl.trim() !== '' &&
+    project.githubUrl.trim().toLowerCase() !== 'none' &&
+    project.githubUrl.trim().toLowerCase() !== '#'
+  );
+
+  const rawTags = ((project as any).techTags || project.tags || []) as string[];
+  const validTags = rawTags.filter((tag: string) => {
+    if (!tag) return false;
+    const trimmed = tag.trim();
+    if (trimmed.startsWith('[') || trimmed.endsWith(']')) return false;
+    if (trimmed.toUpperCase().includes('TECH_')) return false;
+    return true;
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200">
@@ -56,13 +78,26 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         </div>
 
         {/* High-Resolution Media Viewport */}
-        <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-[var(--bg)]">
-          <img
-            src={project.image}
-            alt={project.title}
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
-          />
+        <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-[var(--bg)]">
+          {!imgError && project.image ? (
+            <img
+              src={project.image}
+              alt={`Screenshot of ${project.title} website`}
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => setImgError(true)}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[var(--card)] via-[var(--bg)] to-[var(--card)] p-8 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--primary)_0%,_transparent_70%)] opacity-20 pointer-events-none" />
+              <div className="w-16 h-16 rounded-2xl bg-[var(--primary)]/15 border border-[var(--primary)]/30 flex items-center justify-center mb-4 text-[var(--secondary)] shadow-lg relative z-10">
+                <Layers className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold font-heading text-[var(--text)] relative z-10">{project.title}</h3>
+              <p className="text-sm text-[var(--muted)] max-w-md mt-2 relative z-10">{project.description}</p>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/80 via-transparent to-transparent pointer-events-none" />
         </div>
 
@@ -70,10 +105,10 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         <div className="space-y-4">
           <h3 className="text-base font-semibold text-[var(--text)] flex items-center gap-2">
             <Layers className="w-4 h-4 text-[var(--primary)]" />
-            <span>Architecture & Systems Engineering</span>
+            <span>Architecture & Systems Overview</span>
           </h3>
           <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
-            {project.extendedDescription}
+            {project.extendedDescription || project.description}
           </p>
         </div>
 
@@ -81,7 +116,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         {project.highlights && project.highlights.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--muted)]">
-              Key Technical Innovations
+              Key Features & Highlights
             </h4>
             <div className="grid sm:grid-cols-2 gap-3">
               {project.highlights.map((item, idx) => (
@@ -98,41 +133,47 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         )}
 
         {/* Tech Stack Unboxed */}
-        <div className="pt-2 border-t border-white/5">
-          <span className="text-xs font-mono text-[var(--muted)] block mb-2">Technologies Used</span>
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted)] font-mono">
-            {((project as any).techTags || project.tags || []).map((tag: string, i: number, arr: string[]) => (
-              <span key={tag}>
-                <span className="text-[var(--secondary)]">{tag}</span>
-                {i < arr.length - 1 && <span className="text-white/20 ml-2" aria-hidden="true">/</span>}
-              </span>
-            ))}
+        {validTags.length > 0 && (
+          <div className="pt-2 border-t border-white/5">
+            <span className="text-xs font-mono text-[var(--muted)] block mb-2">Technologies Used</span>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted)] font-mono">
+              {validTags.map((tag: string, i: number, arr: string[]) => (
+                <span key={tag}>
+                  <span className="text-[var(--secondary)]">{tag}</span>
+                  {i < arr.length - 1 && <span className="text-white/20 ml-2" aria-hidden="true">/</span>}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Modal Footer CTAs */}
         <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
           <div className="flex items-center gap-3">
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => soundManager.playClick()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-[var(--text)] text-xs font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all hover:scale-[1.02] active:scale-98"
-            >
-              <span>Launch Live Prototype</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => soundManager.playClick()}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[var(--text)] text-xs font-medium transition-colors"
-            >
-              <Github className="w-3.5 h-3.5" />
-              <span>Source Repository</span>
-            </a>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundManager.playClick()}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-[var(--text)] text-xs font-semibold shadow-lg shadow-[var(--primary)]/20 transition-all hover:scale-[1.02] active:scale-98"
+              >
+                <span>Live</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {hasGithub && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundManager.playClick()}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[var(--text)] text-xs font-medium transition-colors"
+              >
+                <Github className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </a>
+            )}
           </div>
 
           <button

@@ -19,6 +19,30 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects: prop
     ? projects
     : projects.filter((p) => p.category === filter);
 
+  const categories = React.useMemo(() => {
+    const categoryNameMap: Record<string, string> = {
+      'fintech': 'Fintech & Utility',
+      'e-commerce': 'E-Commerce',
+      'showcase': 'Product Showcase',
+      'web-app': 'Web Applications',
+      '3d-webgl': '3D & WebGL',
+      'ai-systems': 'Spatial AI',
+      'creative': 'Creative & Audio',
+    };
+    const found = new Set<string>();
+    projects.forEach((p) => {
+      if (p.category) found.add(p.category);
+    });
+    const tabs = [{ id: 'all', label: `All Projects (${projects.length})` }];
+    found.forEach((cat) => {
+      tabs.push({
+        id: cat,
+        label: categoryNameMap[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, ' ')),
+      });
+    });
+    return tabs;
+  }, [projects]);
+
   return (
     <section id="projects" className="relative py-24 px-6 sm:px-8 max-w-7xl mx-auto scroll-mt-24">
       {/* Section Header */}
@@ -34,13 +58,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects: prop
 
         {/* Filter Controls */}
         <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[var(--card)] border border-white/10 rounded-xl">
-          {[
-            { id: 'all', label: 'All Projects' },
-            { id: 'fintech', label: 'Fintech & Web3' },
-            { id: 'ai-systems', label: 'Spatial AI' },
-            { id: 'creative', label: 'Audio & DSP' },
-            { id: '3d-webgl', label: '3D Constellation' },
-          ].map((tab) => (
+          {categories.map((tab) => (
             <button
               key={tab.id}
               onClick={() => {
@@ -60,15 +78,21 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects: prop
       </div>
 
       {/* Grid of 3D Tilt Project Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {filteredProjects.map((project) => (
-          <ProjectCard3D
-            key={project.id}
-            project={project}
-            onOpenModal={onOpenModal}
-          />
-        ))}
-      </div>
+      {filteredProjects.length === 0 ? (
+        <div className="text-center py-16 text-[var(--muted)] text-sm">
+          No projects found in this category.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredProjects.map((project) => (
+            <ProjectCard3D
+              key={project.id}
+              project={project}
+              onOpenModal={onOpenModal}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Proof / Client Trust Note */}
       <div className="mt-16 p-6 rounded-2xl bg-[var(--card)] backdrop-blur-xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">

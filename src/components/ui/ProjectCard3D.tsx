@@ -45,13 +45,30 @@ export const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, onOpenMod
     setGlarePosition(prev => ({ ...prev, opacity: 0 }));
   };
 
+  const hasGithub = Boolean(
+    project.githubUrl &&
+    project.githubUrl.trim() !== '' &&
+    project.githubUrl.trim().toLowerCase() !== 'none' &&
+    project.githubUrl.trim().toLowerCase() !== '#'
+  );
+
+  // Filter out any placeholder tags like [TECH_1], [TECH_2], etc.
+  const rawTags = ((project as any).techTags || project.tags || []) as string[];
+  const validTags = rawTags.filter((tag: string) => {
+    if (!tag) return false;
+    const trimmed = tag.trim();
+    if (trimmed.startsWith('[') || trimmed.endsWith(']')) return false;
+    if (trimmed.toUpperCase().includes('TECH_')) return false;
+    return true;
+  });
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative rounded-2xl p-[1px] transition-all duration-300 will-change-transform"
+      className="group relative rounded-2xl p-[1px] transition-all duration-300 will-change-transform h-full flex flex-col"
       style={{
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transformStyle: 'preserve-3d',
@@ -72,21 +89,25 @@ export const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, onOpenMod
           }}
         />
 
-        {/* Media Container with 16:9 Aspect Ratio */}
-        <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg)]">
-          {!imgError ? (
+        {/* Media Container with 16:10 Aspect Ratio */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--bg)] rounded-t-2xl">
+          {!imgError && project.image ? (
             <img
               src={project.image}
-              alt={project.title}
+              alt={`Screenshot of ${project.title} website`}
+              loading="lazy"
               referrerPolicy="no-referrer"
               onError={() => setImgError(true)}
               className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-[var(--bg)] p-6 text-center">
-              <Sparkles className="w-8 h-8 text-[var(--secondary)] mb-2" />
-              <span className="text-sm font-semibold text-[var(--text)]">{project.title}</span>
-              <span className="text-xs text-[var(--muted)] mt-1">Interactive 3D WebGL</span>
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[var(--card)] via-[var(--bg)] to-[var(--card)] p-6 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--primary)_0%,_transparent_70%)] opacity-25 pointer-events-none" />
+              <div className="w-12 h-12 rounded-2xl bg-[var(--primary)]/15 border border-[var(--primary)]/30 flex items-center justify-center mb-3 text-[var(--secondary)] shadow-inner relative z-10">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <span className="text-base font-bold font-heading text-[var(--text)] relative z-10">{project.title}</span>
+              <span className="text-xs text-[var(--secondary)] font-mono mt-1 uppercase tracking-wider relative z-10">{project.category}</span>
             </div>
           )}
 
@@ -94,27 +115,43 @@ export const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, onOpenMod
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-black/20" />
 
           {/* Quick Action Overlay on hover */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 z-10">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2.5 z-10">
             <button
               onClick={() => {
                 soundManager.playClick();
                 onOpenModal(project);
               }}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-[var(--text)] text-xs font-semibold shadow-lg shadow-[var(--primary)]/30 transition-transform active:scale-95"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-[var(--text)] text-xs font-semibold shadow-lg shadow-[var(--primary)]/30 transition-transform active:scale-95"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Deep Dive</span>
+              <span>Details</span>
             </button>
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => soundManager.playClick()}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-[var(--text)] transition-colors"
-              title="Inspect Repository"
-            >
-              <Github className="w-4 h-4" />
-            </a>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundManager.playClick()}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-[var(--text)] text-xs font-medium transition-colors"
+                title={`Launch ${project.title}`}
+              >
+                <span>Live</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {hasGithub && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => soundManager.playClick()}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-[var(--text)] text-xs font-medium transition-colors"
+                title="GitHub Repository"
+              >
+                <Github className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </a>
+            )}
           </div>
         </div>
 
@@ -138,32 +175,53 @@ export const ProjectCard3D: React.FC<ProjectCard3DProps> = ({ project, onOpenMod
               {project.title}
             </h3>
 
-            <p className="mt-2 text-sm text-[var(--muted)] line-clamp-2 leading-relaxed">
+            <p className="mt-2 text-sm text-[var(--muted)] line-clamp-3 leading-relaxed">
               {project.description}
             </p>
           </div>
 
-          {/* Tech Stack Unboxed Tags */}
+          {/* Tech Stack Unboxed Tags & Actions */}
           <div className="mt-6 pt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted)] font-mono">
-              {((project as any).techTags || project.tags || []).map((tag: string, i: number, arr: string[]) => (
-                <span key={tag}>
-                  <span className="hover:text-[var(--text)] transition-colors">{tag}</span>
-                  {i < arr.length - 1 && <span className="text-white/20 ml-2" aria-hidden="true">/</span>}
-                </span>
-              ))}
+              {validTags.length > 0 ? (
+                validTags.map((tag: string, i: number, arr: string[]) => (
+                  <span key={tag}>
+                    <span className="hover:text-[var(--text)] transition-colors">{tag}</span>
+                    {i < arr.length - 1 && <span className="text-white/20 ml-2" aria-hidden="true">/</span>}
+                  </span>
+                ))
+              ) : (
+                <span className="text-[var(--muted)]/60 text-xs italic">Web Development</span>
+              )}
             </div>
 
-            <button
-              onClick={() => {
-                soundManager.playClick();
-                onOpenModal(project);
-              }}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--secondary)] hover:text-[var(--accent)] transition-colors"
-            >
-              <span>Explore</span>
-              <ExternalLink className="w-3 h-3" />
-            </button>
+            <div className="flex items-center gap-2">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => soundManager.playClick()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--primary)]/15 hover:bg-[var(--primary)] text-xs font-semibold text-[var(--secondary)] hover:text-[var(--text)] transition-all border border-[var(--primary)]/30 hover:border-[var(--primary)]"
+                >
+                  <span>Live</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+              {hasGithub && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => soundManager.playClick()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-[var(--muted)] hover:text-[var(--text)] transition-colors border border-white/10"
+                  title="Source Code Repository"
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  <span>GitHub</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ interface SkillsSectionProps {
 export interface SkillData {
   id: string;
   name: string;
-  category: 'Frontend' | '3D / Graphics' | 'Backend' | 'Tools / DevOps' | 'Core / Languages';
+  category: string;
   level: number; // 0 - 100
   description: string;
   usedIn: string[];
@@ -24,13 +24,39 @@ export interface SkillData {
 export const SKILLS_LIST: SkillData[] = SITE_CONTENT.skills as SkillData[];
 
 // Exact Category Color Definitions
-export const CATEGORY_COLORS: Record<SkillData['category'], { hex: string; varName: string; label: string }> = {
+export const CATEGORY_COLORS: Record<string, { hex: string; varName: string; label: string }> = {
   'Frontend': { hex: '#22D3EE', varName: 'var(--secondary)', label: 'Frontend' },
   '3D / Graphics': { hex: '#F472B6', varName: 'var(--accent)', label: '3D / Graphics' },
+  '3D': { hex: '#F472B6', varName: 'var(--accent)', label: '3D / Graphics' },
   'Backend': { hex: '#34D399', varName: 'var(--skill-green)', label: 'Backend' },
   'Tools / DevOps': { hex: '#FB923C', varName: 'var(--skill-orange)', label: 'Tools / DevOps' },
+  'Tools': { hex: '#FB923C', varName: 'var(--skill-orange)', label: 'Tools / DevOps' },
+  'DevOps': { hex: '#FB923C', varName: 'var(--skill-orange)', label: 'Tools / DevOps' },
   'Core / Languages': { hex: '#7C3AED', varName: 'var(--primary)', label: 'Core / Languages' },
+  'Core': { hex: '#7C3AED', varName: 'var(--primary)', label: 'Core / Languages' },
 };
+
+export const getCategoryColor = (category?: string) => {
+  if (category && CATEGORY_COLORS[category]) {
+    return CATEGORY_COLORS[category];
+  }
+  const lower = (category || '').toLowerCase();
+  if (lower.includes('front') || lower.includes('web')) return CATEGORY_COLORS['Frontend'];
+  if (lower.includes('3d') || lower.includes('graph')) return CATEGORY_COLORS['3D / Graphics'];
+  if (lower.includes('back') || lower.includes('data') || lower.includes('sql') || lower.includes('server')) return CATEGORY_COLORS['Backend'];
+  if (lower.includes('tool') || lower.includes('devop') || lower.includes('git') || lower.includes('word') || lower.includes('cloud')) return CATEGORY_COLORS['Tools / DevOps'];
+  if (lower.includes('core') || lower.includes('lang') || lower.includes('prog')) return CATEGORY_COLORS['Core / Languages'];
+
+  return { hex: '#22D3EE', varName: 'var(--secondary)', label: category || 'General' };
+};
+
+export const DISPLAY_CATEGORIES = [
+  CATEGORY_COLORS['Frontend'],
+  CATEGORY_COLORS['3D / Graphics'],
+  CATEGORY_COLORS['Backend'],
+  CATEGORY_COLORS['Tools / DevOps'],
+  CATEGORY_COLORS['Core / Languages'],
+];
 
 // =========================================================================
 // 2. FIBONACCI SPHERE DISTRIBUTION & 3D WIREFRAME MESH
@@ -59,7 +85,7 @@ function computeFibonacciNodes(skills: SkillData[], radius: number): SkillNode[]
     nodes.push({
       skill: skills[i],
       position: [x * radius, y * radius, z * radius],
-      color: CATEGORY_COLORS[skills[i].category].hex,
+      color: getCategoryColor(skills[i]?.category).hex,
     });
   }
 
@@ -376,7 +402,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills: propSkills
   };
 
   const activeCategoryColor = selectedSkill
-    ? CATEGORY_COLORS[selectedSkill.category].hex
+    ? getCategoryColor(selectedSkill.category).hex
     : '#22D3EE';
 
   return (
@@ -399,9 +425,9 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills: propSkills
 
         {/* Category Legend Badges */}
         <div className="flex flex-wrap items-center gap-2">
-          {Object.entries(CATEGORY_COLORS).map(([cat, info]) => (
+          {DISPLAY_CATEGORIES.map((info) => (
             <div
-              key={cat}
+              key={info.label}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-white/10 bg-[var(--card)]"
             >
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: info.hex }} />
